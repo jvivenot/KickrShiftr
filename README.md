@@ -43,5 +43,8 @@ Technically speaking, here are the important bits :
 - Current value cannot be retrieved from the trainer
 - Due to the unit used, max circumference is 6.5535 meters (can be limiting on flats if one uses the largest cog and smallest ring)
 
-## Screenshot
+## Screenshots
+
+![Light style](screenshots/white.png)
+![Dark style](screenshots/black.png)
 
