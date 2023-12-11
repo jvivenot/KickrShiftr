@@ -45,6 +45,16 @@ Technically speaking, here are the important bits :
 
 ## Screenshots
 
-![Light style](screenshots/white.png)
-![Dark style](screenshots/black.png)
+<img src="screenshots/white.png" alt="light" width="200"/>
+<img src="screenshots/black.png" alt="black" width="200"/>
 
+## Useful links
+
+- https://www.bluetooth.com/specifications/specs/fitness-machine-service-1-0/
+- https://www.bluetooth.com/specifications/specs/fitness-machine-profile-1-0/
+
+## Bluetooth sniffing
+
+Here are the messages seen by packetLogger when the wahoo app updates the wheel circumference
+
+![PacketLogger screenshot](screenshots/sniff.png)
