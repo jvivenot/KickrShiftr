@@ -17,8 +17,10 @@ struct ContentView: View {
     
     @State
     var prevWheelSize : Double = 0
+    
+    // 2.096 is the real wheel circumference for a 700x23C wheel
     @State
-    var wheelSize : Double = 2.056 {
+    var wheelSize : Double = 2.096 {
         didSet {
             if wheeleditable {
                 wheeleditable = false
@@ -28,33 +30,16 @@ struct ContentView: View {
         }
     }
     
+    // ratio between gears when shiting up/down
+    // I checked a few ultegra sprockets. ratio between gears lies between 1.07 and 1.12
     @State
-    var ratio : Double = 1.1 // 16 gears mean 4.6 total ratio
+    var ratio : Double = 1.1
     
     @State
     var state : String = "Initializing..."
     
     init(previewMode : Bool) {
         self.previewMode = previewMode
-    }
-    
-    struct DebugField: Identifiable {
-        var id = UUID()
-        var field: String
-        var value: String
-    }
-    @State
-    var debug_info : [DebugField] = []
-    
-    var buttonForeColor: Color {
-        get {
-            if enabled {
-                return Color(UIColor.placeholderText)
-            }
-            else {
-                return Color(UIColor.placeholderText.withAlphaComponent(0.3))
-            }
-        }
     }
 
     var body: some View {
@@ -143,12 +128,12 @@ struct ContentView: View {
             }
             Slider(
                 value: $ratio,
-                in: 1.0...2.5,
+                in: 1.0...2,
                 step: 0.1
             ) {} minimumValueLabel: {
                 Text("1")
             } maximumValueLabel: {
-                Text("2.5")
+                Text("2")
             }
         }
         .padding()
@@ -166,7 +151,7 @@ struct ContentView: View {
         wheeleditable = true
         bt?.setWheelCircumference_callback(perform: wheelChanged)
         guard let bt else { return }
-        //guard !previewMode else { return }
+        
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             guard bt.isConnected() else {
                 print("Bluetooth not connected to device yet")
@@ -178,9 +163,10 @@ struct ContentView: View {
             }
             print("Connection to kickr functional !")
             state = "Connected to \n\(bt.deviceName())"
+            // do not let the screen go dark while the app is used
             UIApplication.shared.isIdleTimerDisabled = true
             enabled = true
-            timer.invalidate()
+            timer.invalidate() // finally connected. get rid of task
         }
     }
     

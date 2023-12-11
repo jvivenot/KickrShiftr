@@ -23,11 +23,12 @@ class BluetoothManager : NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
     private var callback: ((_ error: Error?) -> ())?
     
     let services = [
-        //CBUUID(string: "1826"), // fitness machine
-        CBUUID(string: "1818"),  // cycling power
+        // kickr core provides other services, but wheel circumference setting is in 1818
+        CBUUID(string: "1818"),
     ]
     
-    let configUUID = CBUUID(string: "A026E005-0A7D-4AB3-97FA-F1500F9FEB8B") // what I found reverse-engineering the wheel circumference setting
+    // found by sniffing packets sent by wahoo iphone app
+    let configUUID = CBUUID(string: "A026E005-0A7D-4AB3-97FA-F1500F9FEB8B")
     
     override init() {
         super.init()
@@ -67,7 +68,7 @@ class BluetoothManager : NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             print("    \(v.key) => \(v.value)")
         }
         if let name = peripheral.name, self.peripheral == nil {
-            if name.contains("KICKR") {
+            if name.contains("KICKR") { // mine is "KICKR CORE CBD5" - may need a better filtering ?
                 self.peripheral = peripheral // need to hold a ref or it will be destroyed when out of scope
                 centralManager.connect(peripheral, options:nil)
             }
@@ -76,7 +77,7 @@ class BluetoothManager : NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         self.connected = true
-        peripheral.delegate = self // FIXME should probably have a separate class
+        peripheral.delegate = self
         peripheral.discoverServices(services)
     }
     
@@ -93,7 +94,6 @@ class BluetoothManager : NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
             print ("    Service: \(s.description) uuid:\(s.uuid)")
         }
         for service in services {
-            //peripheral.discoverCharacteristics(nil, for: service)
             peripheral.discoverCharacteristics([configUUID], for: service)
         }
     }
@@ -159,6 +159,7 @@ class BluetoothManager : NSObject, CBCentralManagerDelegate, CBPeripheralDelegat
     }
 }
 
+// This mock class is used for previews in Xcode to act as an actual bluetooth device
 class MockBluetoothManager : BluetoothManagerProtocol {
     
     private var found_info = false
