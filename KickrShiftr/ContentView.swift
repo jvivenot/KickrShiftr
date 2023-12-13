@@ -7,6 +7,31 @@
 
 import SwiftUI
 
+struct GearChangeButton: View {
+    var icon: String
+    var color: Color
+    var on: () -> Void
+    var enabled: Bool
+    var hapticLevel:  UIImpactFeedbackGenerator.FeedbackStyle = .medium
+    
+    var body: some View {
+        Button {
+            on()
+            UIImpactFeedbackGenerator(style: hapticLevel).impactOccurred()
+        } label: {
+            Image(systemName:icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width:110, height:110)
+                .foregroundColor(Color(UIColor.placeholderText))
+                .rotationEffect(.degrees(-90))
+        }
+        .buttonStyle(.bordered)
+        .disabled(!enabled)
+        .tint(color.opacity(1.3))
+    }
+}
+
 struct ContentView: View {
     @State
     var enabled = false
@@ -58,66 +83,36 @@ struct ContentView: View {
                     GridRow {
                         Color.clear
                             .gridCellUnsizedAxes([.horizontal, .vertical])
-                        Button {
-                            speedUp(2)
-                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                        } label: {
-                            Image(systemName:"chevron.forward.2")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width:110, height:110)
-                                .foregroundColor(Color(UIColor.placeholderText))
-                                .rotationEffect(.degrees(-90))
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(!wheeleditable || !enabled)
-                        .tint(.green.opacity(1.3))
+                        GearChangeButton(
+                            icon: "chevron.forward.2",
+                            color: .green,
+                            on: { speedUp(2) },
+                            enabled: (wheeleditable && enabled),
+                            hapticLevel: .heavy
+                        )
                     }
                     GridRow {
-                        Button {
-                            speedDown()
-                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        } label: {
-                            Image(systemName:"chevron.backward")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width:110, height:110)
-                                .foregroundColor(Color(UIColor.placeholderText))
-                                .rotationEffect(.degrees(-90))
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(!wheeleditable || !enabled)
-                        .tint(.red.opacity(1.3))
-                        Button {
-                            speedUp()
-                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        } label: {
-                            Image(systemName:"chevron.forward")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width:110, height:110)
-                                .foregroundColor(Color(UIColor.placeholderText))
-                                .rotationEffect(.degrees(-90))
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(!wheeleditable || !enabled)
-                        .tint(.green.opacity(1.3))
+                        GearChangeButton(
+                            icon: "chevron.backward",
+                            color: .red,
+                            on: { speedDown() },
+                            enabled: (wheeleditable && enabled)
+                        )
+                        GearChangeButton(
+                            icon: "chevron.forward",
+                            color: .green,
+                            on: { speedUp() },
+                            enabled: (wheeleditable && enabled)
+                        )
                     }
                     GridRow {
-                        Button {
-                            speedDown(2)
-                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                        } label: {
-                            Image(systemName:"chevron.backward.2")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width:110, height:110)
-                                .foregroundColor(Color(UIColor.placeholderText))
-                                .rotationEffect(.degrees(-90))
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(!wheeleditable || !enabled)
-                        .tint(.red.opacity(1.3))
+                        GearChangeButton(
+                            icon: "chevron.backward.2",
+                            color: .red,
+                            on: { speedDown(2) },
+                            enabled: (wheeleditable && enabled),
+                            hapticLevel: .heavy
+                        )
                         Color.clear
                             .gridCellUnsizedAxes([.horizontal, .vertical])
                     }
