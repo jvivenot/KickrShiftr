@@ -54,40 +54,73 @@ struct ContentView: View {
             Spacer()
             HStack {
                 Spacer()
-                VStack {
-                    Button {
-                        speedDown()
-                    } label: {
-                        Image(systemName:"chevron.down")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width:120, height:120)
-                            .foregroundColor(Color(UIColor.placeholderText))
+                Grid {
+                    GridRow {
+                        Color.clear
+                            .gridCellUnsizedAxes([.horizontal, .vertical])
+                        Button {
+                            speedUp(2)
+                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                        } label: {
+                            Image(systemName:"chevron.forward.2")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:110, height:110)
+                                .foregroundColor(Color(UIColor.placeholderText))
+                                .rotationEffect(.degrees(-90))
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!wheeleditable || !enabled)
+                        .tint(.green.opacity(1.3))
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(!wheeleditable || !enabled)
-                    .tint(.red.opacity(1.3))
-                    Image(systemName: "tortoise")
-                        .font(.largeTitle)
-                        .frame(height:45)
-                }
-                Spacer()
-                VStack {
-                    Button {
-                        speedUp()
-                    } label: {
-                        Image(systemName:"chevron.up")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width:120, height:120)
-                            .foregroundColor(Color(UIColor.placeholderText))
+                    GridRow {
+                        Button {
+                            speedDown()
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        } label: {
+                            Image(systemName:"chevron.backward")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:110, height:110)
+                                .foregroundColor(Color(UIColor.placeholderText))
+                                .rotationEffect(.degrees(-90))
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!wheeleditable || !enabled)
+                        .tint(.red.opacity(1.3))
+                        Button {
+                            speedUp()
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        } label: {
+                            Image(systemName:"chevron.forward")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:110, height:110)
+                                .foregroundColor(Color(UIColor.placeholderText))
+                                .rotationEffect(.degrees(-90))
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!wheeleditable || !enabled)
+                        .tint(.green.opacity(1.3))
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(!wheeleditable || !enabled)
-                    .tint(.green.opacity(1.3))
-                    Image(systemName: "hare")
-                        .font(.largeTitle)
-                        .frame(height:45)
+                    GridRow {
+                        Button {
+                            speedDown(2)
+                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                        } label: {
+                            Image(systemName:"chevron.backward.2")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:110, height:110)
+                                .foregroundColor(Color(UIColor.placeholderText))
+                                .rotationEffect(.degrees(-90))
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!wheeleditable || !enabled)
+                        .tint(.red.opacity(1.3))
+                        Color.clear
+                            .gridCellUnsizedAxes([.horizontal, .vertical])
+                    }
                 }
                 Spacer()
             }
@@ -178,11 +211,11 @@ struct ContentView: View {
         wheeleditable = true
     }
     
-    func speedUp() {
-        wheelSize *= ratio
+    func speedUp(_ factor : Double = 1.0) {
+        wheelSize *= pow(ratio,factor)
     }
-    func speedDown() {
-        wheelSize /= ratio
+    func speedDown(_ factor : Double = 1.0) {
+        wheelSize /= pow(ratio,factor)
     }
 }
 
