@@ -67,7 +67,8 @@ struct ContentView: View {
         self.previewMode = previewMode
     }
     
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+     // vertical = compact seems to be the simplest way to determine landscape orientation on iphone. e.g. on my iphone 8, width is always compact https://developer.apple.com/design/human-interface-guidelines/layout#Device-size-classes
+    @Environment(\.verticalSizeClass) var verticalSizeClass
 
     var body: some View {
         VStack {
@@ -82,7 +83,7 @@ struct ContentView: View {
             HStack {
                 Spacer()
                 Grid {
-                    if horizontalSizeClass == .compact
+                    if verticalSizeClass == .regular
                     {
                         GridRow {
                             Color.clear
@@ -224,7 +225,7 @@ struct ContentView: View {
                 return
             }
             print("Connection to kickr functional !")
-            state = "Connected to \n\(bt.deviceName())"
+            state = "Connected to \(bt.deviceName())"
             // do not let the screen go dark while the app is used
             UIApplication.shared.isIdleTimerDisabled = true
             enabled = true
