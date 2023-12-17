@@ -66,6 +66,8 @@ struct ContentView: View {
     init(previewMode : Bool) {
         self.previewMode = previewMode
     }
+    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     var body: some View {
         VStack {
@@ -80,41 +82,73 @@ struct ContentView: View {
             HStack {
                 Spacer()
                 Grid {
-                    GridRow {
-                        Color.clear
-                            .gridCellUnsizedAxes([.horizontal, .vertical])
-                        GearChangeButton(
-                            icon: "chevron.forward.2",
-                            color: .green,
-                            on: { speedUp(2) },
-                            enabled: (wheeleditable && enabled),
-                            hapticLevel: .heavy
-                        )
-                    }
-                    GridRow {
-                        GearChangeButton(
-                            icon: "chevron.backward",
-                            color: .red,
-                            on: { speedDown() },
-                            enabled: (wheeleditable && enabled)
-                        )
-                        GearChangeButton(
-                            icon: "chevron.forward",
-                            color: .green,
-                            on: { speedUp() },
-                            enabled: (wheeleditable && enabled)
-                        )
-                    }
-                    GridRow {
-                        GearChangeButton(
-                            icon: "chevron.backward.2",
-                            color: .red,
-                            on: { speedDown(2) },
-                            enabled: (wheeleditable && enabled),
-                            hapticLevel: .heavy
-                        )
-                        Color.clear
-                            .gridCellUnsizedAxes([.horizontal, .vertical])
+                    if horizontalSizeClass == .compact
+                    {
+                        GridRow {
+                            Color.clear
+                                .gridCellUnsizedAxes([.horizontal, .vertical])
+                            GearChangeButton(
+                                icon: "chevron.forward.2",
+                                color: .green,
+                                on: { speedUp(2) },
+                                enabled: (wheeleditable && enabled),
+                                hapticLevel: .heavy
+                            )
+                        }
+                        GridRow {
+                            GearChangeButton(
+                                icon: "chevron.backward",
+                                color: .red,
+                                on: { speedDown() },
+                                enabled: (wheeleditable && enabled)
+                            )
+                            GearChangeButton(
+                                icon: "chevron.forward",
+                                color: .green,
+                                on: { speedUp() },
+                                enabled: (wheeleditable && enabled)
+                            )
+                        }
+                        GridRow {
+                            GearChangeButton(
+                                icon: "chevron.backward.2",
+                                color: .red,
+                                on: { speedDown(2) },
+                                enabled: (wheeleditable && enabled),
+                                hapticLevel: .heavy
+                            )
+                            Color.clear
+                                .gridCellUnsizedAxes([.horizontal, .vertical])
+                        }
+                    } else {
+                        GridRow {
+                            GearChangeButton(
+                                icon: "chevron.backward.2",
+                                color: .red,
+                                on: { speedDown(2) },
+                                enabled: (wheeleditable && enabled),
+                                hapticLevel: .heavy
+                            )
+                            GearChangeButton(
+                                icon: "chevron.backward",
+                                color: .red,
+                                on: { speedDown() },
+                                enabled: (wheeleditable && enabled)
+                            )
+                            GearChangeButton(
+                                icon: "chevron.forward",
+                                color: .green,
+                                on: { speedUp() },
+                                enabled: (wheeleditable && enabled)
+                            )
+                            GearChangeButton(
+                                icon: "chevron.forward.2",
+                                color: .green,
+                                on: { speedUp(2) },
+                                enabled: (wheeleditable && enabled),
+                                hapticLevel: .heavy
+                            )
+                        }
                     }
                 }
                 Spacer()
